@@ -16,7 +16,7 @@
   color: #2c3e50;
   margin-top: 60px;
 }
-*{
-  background-color: #101010;
+.round{
+  border-radius: 4px;
 }
 </style>
