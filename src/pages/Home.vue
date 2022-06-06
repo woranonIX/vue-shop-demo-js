@@ -5,13 +5,28 @@ import shopdata from "../storedata.json";
 let showdetail = ref(false);
 let put = ref([]);
 let cart = reactive([]);
+let showcart = ref(false);
 
-const cartfilter = computed({
+const cartsum = computed({
   get: () => {
-    let x = shopdata.filter((item) => item.count > 0);
-    return x;
+    let checked = cart.filter((item) => item.checked == true);
+    let sumcart = checked.reduce(
+      (sum, item) => item.count * item.price + sum,
+      0
+    );
+    //console.log(x);
+    return sumcart;
   },
 });
+
+function addtocart(input) {
+  let dupcheck = cart.filter((item) => item.id == input.id);
+  if (dupcheck == "") {
+    cart.push({ ...input, checked: true });
+  } else {
+    dupcheck[0].count += input.count;
+  }
+}
 </script>
 
 <template>
@@ -62,9 +77,8 @@ const cartfilter = computed({
             <div class="addtocartbutton">
               <button
                 @click="
-                  cart.push(put);
+                  addtocart(put);
                   put.count = 0;
-                  alert(cart);
                 "
                 :disabled="put.count == 0"
               >
@@ -89,20 +103,20 @@ const cartfilter = computed({
     </div>
 
     <div class="contact">
-      <button style="border: none; position: relative">
-        <span class="mdi mdi-cart mdi-36px"></span>
+      <button
+        style="border: none; position: relative"
+        @click="
+          showcart = !showcart;
+          showdetail = false;
+        "
+      >
         <span
-          style="
-            position: absolute;
-            width: 2vw;
-            height: 2vh;
-            background-color: red;
-            right: 8%;
-            color: white;
-            border-radius: 1rem;
-          "
-          >{{ cartfilter.lenght }}</span
-        >
+          class="mdi mdi-cart mdi-36px"
+          style="color: orange"
+          v-if="showcart"
+        ></span>
+        <span class="mdi mdi-cart mdi-36px" v-else></span>
+        <span class="cartcount" v-if="cart.length > 0">{{ cart.length }}</span>
       </button>
       <button style="border: none">
         <span class="mdi mdi-github mdi-36px"></span>
@@ -110,7 +124,7 @@ const cartfilter = computed({
     </div>
   </nav>
   <!-- Shop Section -->
-  <div>
+  <div v-if="!showcart">
     <div class="shop row">
       <div v-for="(i, index) in shopdata" class="column">
         <img :src="i.src" alt="" class="itemimage" />
@@ -128,6 +142,75 @@ const cartfilter = computed({
         </div>
       </div>
     </div>
+  </div>
+
+  <!-- Cart section -->
+  <div v-if="showcart" class="cartpanel">
+    CART
+    <div
+      class="row cartitem"
+      v-for="i in cart"
+      :class="{ highlight: i.checked }"
+    >
+      <div class="columndetail" style="width: 5%">
+        <input
+          type="checkbox"
+          name=""
+          id=""
+          v-model="i.checked"
+          class="cartcheckbox"
+        />
+        <div
+          class="mdi mdi-trash-can mdi-24px"
+          style="text-align: center; margin-top: 25vh; color: red;"
+        ></div>
+      </div>
+      <div class="columndetail" style="width: 45%">
+        <img :src="i.src" class="cartimage round" />
+      </div>
+      <div class="columndetail" style="width: 50%">
+        <h2 class="cartname">
+          {{ i.name }}
+        </h2>
+        <h2 class="cartname">${{ i.price }}</h2>
+        <div style="text-align: start; margin-left: 4vw">
+          <button
+            class="itemcountbutton"
+            style="
+              font-size: 1.5rem;
+              width: 30px;
+              box-shadow: 1px 1px 4px 1px inset;
+            "
+            @click="i.count--"
+            :disabled="i.count < 1"
+          >
+            -
+          </button>
+          <input
+            type="number"
+            class="itemcount round"
+            style="width: 50px; font-size: 1.5rem"
+            v-model="i.count"
+          />
+          <button
+            class="itemcountbutton"
+            style="
+              font-size: 1.5rem;
+              width: 30px;
+              box-shadow: 1px 1px 4px 1px inset;
+            "
+            @click="i.count++"
+          >
+            +
+          </button>
+        </div>
+      </div>
+    </div>
+    <h2 v-if="cart.length > 0" style="text-align: end">
+      subtotal
+      <span> ${{ cartsum }} </span>
+    </h2>
+    <span v-else>cart it's empty add some wonderful product to cart</span>
   </div>
 </template>
 
@@ -149,7 +232,7 @@ nav {
   height: 48px;
   position: absolute;
   top: 6px;
-  left: 5%;
+  left: 4%;
 }
 .navbar {
   height: 60px;
@@ -164,26 +247,26 @@ nav {
   height: 36px;
   position: absolute;
   top: 7px;
-  right: 15%;
+  right: 25%;
   font-size: 30px;
   width: 50%;
-  max-width: 400px;
-  border-radius: 9px;
+  max-width: 300px;
+  border-radius: 4px;
   text-align: start;
   border: none;
   background-color: orange;
 }
 .searchbutton {
   position: absolute;
-  right: 16%;
-  top: 13px;
+  right: 26%;
+  top: 11px;
   height: 30px;
   font-size: 20px;
   vertical-align: middle;
   width: 50px;
   border-radius: 3px;
   border: none;
-  background-color: orange;
+  background-color: rgb(248, 172, 109);
 }
 .contact {
   position: absolute;
@@ -222,6 +305,9 @@ nav {
 .item p {
   text-align: start;
   margin-left: 0.5rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .itemname {
   font-size: 1.25rem;
@@ -309,7 +395,7 @@ img.mini {
   max-width: 7vw;
   object-fit: cover;
 }
-.column h1 {
+.columndetail h1 {
   text-transform: capitalize;
 }
 .columndetail {
@@ -338,5 +424,50 @@ input[type="number"] {
   margin: 0 2% 0 2%;
   cursor: pointer;
   color: #363636;
+}
+.cartpanel {
+  width: 90%;
+  margin: 10vh auto 0 auto;
+  max-width: 800px;
+}
+.cartcount {
+  position: absolute;
+  width: 15px;
+  height: 15px;
+  background-color: red;
+  right: 8%;
+  top: 0%;
+  color: white;
+  border-radius: 1rem;
+}
+.cartimage {
+  width: 100%;
+  height: 200px;
+  max-width: 200px;
+  display: flex;
+  flex-wrap: wrap;
+  object-fit: cover;
+  object-position: center;
+  margin: 0.5rem;
+}
+.cartname {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: start;
+  margin-left: 3vw;
+  text-transform: capitalize;
+}
+.cartitem {
+  margin-top: 0.5rem;
+}
+.highlight {
+  background-color: #ffc8b7;
+}
+.cartcheckbox {
+  width: 20px;
+  height: 20px;
+  vertical-align: middle;
+  background-color: orange;
 }
 </style>
