@@ -40,7 +40,7 @@ function addtocart(input) {
           <div class="row">
             <div
               class="columndetail"
-              style="width: 20%; height: 100px"
+              style="width: 20%; max-height: 64px;"
               v-for="i in 5"
             >
               <img :src="put.src" alt="" class="mini" @click="overlay = i" />
@@ -50,11 +50,13 @@ function addtocart(input) {
         <div class="columndetail" style="width: 40%; text-align: start">
           <div style="margin-left: 1rem">
             <h1>{{ put.name }}</h1>
+            <div style="color:orange">
             <span class="mdi mdi-star"></span>
             <span class="mdi mdi-star"></span>
             <span class="mdi mdi-star"></span>
             <span class="mdi mdi-star"></span>
             <span class="mdi mdi-star"></span>
+            </div>
             <h1 style="color: orange">${{ put.price }}</h1>
             <span>quantity</span>
             <div>
@@ -74,8 +76,9 @@ function addtocart(input) {
               />
               <button class="itemcountbutton" @click="put.count++">+</button>
             </div>
-            <div class="addtocartbutton">
+            <div >
               <button
+              class="addtocartbutton round"
                 @click="
                   addtocart(put);
                   put.count = 0;
@@ -96,7 +99,7 @@ function addtocart(input) {
     <img src="../assets/logo.png" alt="" class="logo" />
     <span class="brand hide">Shop Demo</span>
     <div style="position: relative">
-      <input type="text" class="searchinput" placeholder="type to search" />
+      <input type="text" class="searchinput" placeholder=" type to search" />
       <button class="searchbutton">
         <span class="mdi mdi-magnify"></span>
       </button>
@@ -125,6 +128,9 @@ function addtocart(input) {
   </nav>
   <!-- Shop Section -->
   <div v-if="!showcart">
+    <div>
+      asdadsad
+    </div>
     <div class="shop row">
       <div v-for="(i, index) in shopdata" class="column">
         <img :src="i.src" alt="" class="itemimage" />
@@ -146,7 +152,7 @@ function addtocart(input) {
 
   <!-- Cart section -->
   <div v-if="showcart" class="cartpanel">
-    CART
+    <h1>CART</h1>
     <div
       class="row cartitem"
       v-for="i in cart"
@@ -248,7 +254,7 @@ nav {
   position: absolute;
   top: 7px;
   right: 25%;
-  font-size: 30px;
+  font-size: 24px;
   width: 50%;
   max-width: 300px;
   border-radius: 4px;
@@ -311,6 +317,7 @@ nav {
 }
 .itemname {
   font-size: 1.25rem;
+  text-transform: capitalize;
 }
 .itemprice {
   color: orange;
@@ -380,8 +387,6 @@ button.overlay {
     width: 49%;
   }
 }
-.column img {
-}
 .showimage {
   width: 100%;
   height: 100%;
@@ -389,11 +394,16 @@ button.overlay {
 }
 
 img.mini {
-  height: 100%;
-  max-height: 64px;
-  width: 100%;
-  max-width: 7vw;
+height: 64px;
+width: 100%;
+max-width: 64px;
   object-fit: cover;
+  transform: scale(90%);
+  opacity: 60%;
+}
+img.mini:hover{
+  box-shadow:  2px 1px 4px 0  orange;
+  opacity: 100%;
 }
 .columndetail h1 {
   text-transform: capitalize;
@@ -470,4 +480,16 @@ input[type="number"] {
   vertical-align: middle;
   background-color: orange;
 }
+.addtocartbutton{
+  width: 95%;
+  height: 2rem;
+  border: solid 1px orange;
+  color: orange;
+}
+button.addtocartbutton:disabled{
+    border: solid 1px grey;
+  color: grey;
+}
+
+
 </style>
