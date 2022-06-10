@@ -6,6 +6,7 @@ let showdetail = ref(false);
 let put = ref([]);
 let cart = reactive([]);
 let showcart = ref(false);
+let searchtext = ref("");
 
 const cartsum = computed({
   get: () => {
@@ -25,6 +26,25 @@ function addtocart(input) {
     cart.push({ ...input, checked: true });
   } else {
     dupcheck[0].count += input.count;
+  }
+}
+
+function query(search) {
+  if (search != '') {
+    let filtered = shopdata.filter((item) => item.name.match(search));
+    return filtered
+  }
+  else
+  {
+    return shopdata
+  }
+}
+
+function deleteitem(index) {
+  let item = cart[index]
+  if(confirm('want to remove "'+item.name+'" from cart?'))
+  {
+    cart.splice(index,1)
   }
 }
 </script>
@@ -50,6 +70,7 @@ function addtocart(input) {
         <div class="columndetail" style="width: 40%; text-align: start">
           <div style="margin-left: 1rem">
             <h1>{{ put.name }}</h1>
+<<<<<<< HEAD
             <div style="color:orange">
             <span class="mdi mdi-star"></span>
             <span class="mdi mdi-star"></span>
@@ -57,6 +78,9 @@ function addtocart(input) {
             <span class="mdi mdi-star"></span>
             <span class="mdi mdi-star"></span>
             </div>
+=======
+            <span class="mdi mdi-star" v-for="i in 5" :class="{orange:put.id>=i},{disabled:put.id<i}"></span>
+>>>>>>> b187cd0b2a3d54e5fda414aca8f873143f98c3a9
             <h1 style="color: orange">${{ put.price }}</h1>
             <span>quantity</span>
             <div>
@@ -83,6 +107,7 @@ function addtocart(input) {
                   addtocart(put);
                   put.count = 0;
                 "
+                class="addtocartbutton round"
                 :disabled="put.count == 0"
               >
                 Add to cart <span class="mdi mdi-cart"></span>
@@ -99,10 +124,15 @@ function addtocart(input) {
     <img src="../assets/logo.png" alt="" class="logo" />
     <span class="brand hide">Shop Demo</span>
     <div style="position: relative">
+<<<<<<< HEAD
       <input type="text" class="searchinput" placeholder=" type to search" />
       <button class="searchbutton">
+=======
+      <input type="text" class="searchinput" placeholder="type to search" v-model="searchtext" v-if="!showcart" />
+      <!-- button class="searchbutton">
+>>>>>>> b187cd0b2a3d54e5fda414aca8f873143f98c3a9
         <span class="mdi mdi-magnify"></span>
-      </button>
+      </button -->
     </div>
 
     <div class="contact">
@@ -112,17 +142,13 @@ function addtocart(input) {
           showcart = !showcart;
           showdetail = false;
         "
+        :class="{cartopen:showcart}"
       >
-        <span
-          class="mdi mdi-cart mdi-36px"
-          style="color: orange"
-          v-if="showcart"
-        ></span>
-        <span class="mdi mdi-cart mdi-36px" v-else></span>
+        <span class="mdi mdi-cart mdi-36px" ></span>
         <span class="cartcount" v-if="cart.length > 0">{{ cart.length }}</span>
       </button>
-      <button style="border: none">
-        <span class="mdi mdi-github mdi-36px"></span>
+      <button style="border: none" >
+        <a class="mdi mdi-github mdi-36px" href="https://github.com/woranonIX/vue-shop-demo-js"></a>
       </button>
     </div>
   </nav>
@@ -132,8 +158,8 @@ function addtocart(input) {
       asdadsad
     </div>
     <div class="shop row">
-      <div v-for="(i, index) in shopdata" class="column">
-        <img :src="i.src" alt="" class="itemimage" />
+      <div v-for="(i, index) in query(searchtext)" class="column" v-motion-pop>
+        <img :src="i.src" alt="" class="itemimage round" />
         <div class="item">
           <p class="itemname">{{ i.name }}</p>
           <div class="itembuttom">
@@ -152,10 +178,14 @@ function addtocart(input) {
 
   <!-- Cart section -->
   <div v-if="showcart" class="cartpanel">
+<<<<<<< HEAD
     <h1>CART</h1>
+=======
+    <h1>Shopping Cart</h1>
+>>>>>>> b187cd0b2a3d54e5fda414aca8f873143f98c3a9
     <div
-      class="row cartitem"
-      v-for="i in cart"
+      class="row cartitem round"
+      v-for="(i,index) in cart"
       :class="{ highlight: i.checked }"
     >
       <div class="columndetail" style="width: 5%">
@@ -168,7 +198,7 @@ function addtocart(input) {
         />
         <div
           class="mdi mdi-trash-can mdi-24px"
-          style="text-align: center; margin-top: 25vh; color: red;"
+          style="text-align: center; margin-top: 25vh; color: red"
         ></div>
       </div>
       <div class="columndetail" style="width: 45%">
@@ -180,30 +210,43 @@ function addtocart(input) {
         </h2>
         <h2 class="cartname">${{ i.price }}</h2>
         <div style="text-align: start; margin-left: 4vw">
-          <button
-            class="itemcountbutton"
+          <button v-if="i.count>1"
+            class="itemcountbutton round"
             style="
               font-size: 1.5rem;
               width: 30px;
-              box-shadow: 1px 1px 4px 1px inset;
+              height: 40px;
+              border:solid .5px orange
             "
             @click="i.count--"
-            :disabled="i.count < 1"
           >
             -
+          </button>
+                    <button v-else
+            class="itemcountbutton round"
+            style="
+              font-size: 1.5rem;
+              width: 30px;
+              height: 40px;
+              border:solid .5px orange
+            "
+            @click="deleteitem(index)"
+          >
+            x
           </button>
           <input
             type="number"
             class="itemcount round"
-            style="width: 50px; font-size: 1.5rem"
+            style="width: 50px; font-size: 1.5rem;box-shadow: none;border:solid .5px orange;"
             v-model="i.count"
           />
           <button
-            class="itemcountbutton"
+            class="itemcountbutton round"
             style="
               font-size: 1.5rem;
+              height: 40px;
               width: 30px;
-              box-shadow: 1px 1px 4px 1px inset;
+              border:solid .5px orange
             "
             @click="i.count++"
           >
@@ -278,9 +321,7 @@ nav {
   position: absolute;
   top: 5px;
   right: 2%;
-  font-size: 36px;
   background-color: transparent;
-  border: 2px;
 }
 
 * {
@@ -323,6 +364,7 @@ nav {
   color: orange;
   font-size: 1.5rem;
   text-align: start;
+  margin-left: 1vw;
 }
 .itembutton {
   margin-left: auto;
@@ -360,6 +402,7 @@ nav {
   top: 0;
   left: 0;
   background-color: #20202080;
+  z-index: 99;
 }
 button.overlay {
   position: absolute;
@@ -472,7 +515,7 @@ input[type="number"] {
   margin-top: 0.5rem;
 }
 .highlight {
-  background-color: #ffc8b7;
+  background-color: #ffc8b750;
 }
 .cartcheckbox {
   width: 20px;
@@ -480,6 +523,7 @@ input[type="number"] {
   vertical-align: middle;
   background-color: orange;
 }
+<<<<<<< HEAD
 .addtocartbutton{
   width: 95%;
   height: 2rem;
@@ -492,4 +536,34 @@ button.addtocartbutton:disabled{
 }
 
 
+=======
+a{
+  text-decoration: none;
+  color: white;
+}
+.cartopen{
+  color: orange;
+  background-color: white;
+  border-radius: 4px 4px 0 0;
+  height: 60px;
+  padding-bottom: 5vh;
+}
+.orange{
+  color: orange;
+}
+.addtocartbutton{
+  width: 95%;
+  height: 2rem;
+  margin-top: 1.5rem;
+  color: orange;
+  border: solid 2px orange;
+  cursor:pointer;
+}
+.addtocartbutton:disabled{
+  opacity: 50%;
+  color: black;
+  box-shadow: none;
+  border: none;
+}
+>>>>>>> b187cd0b2a3d54e5fda414aca8f873143f98c3a9
 </style>
