@@ -70,17 +70,7 @@ function deleteitem(index) {
         <div class="columndetail" style="width: 40%; text-align: start">
           <div style="margin-left: 1rem">
             <h1>{{ put.name }}</h1>
-<<<<<<< HEAD
-            <div style="color:orange">
-            <span class="mdi mdi-star"></span>
-            <span class="mdi mdi-star"></span>
-            <span class="mdi mdi-star"></span>
-            <span class="mdi mdi-star"></span>
-            <span class="mdi mdi-star"></span>
-            </div>
-=======
             <span class="mdi mdi-star" v-for="i in 5" :class="{orange:put.id>=i},{disabled:put.id<i}"></span>
->>>>>>> b187cd0b2a3d54e5fda414aca8f873143f98c3a9
             <h1 style="color: orange">${{ put.price }}</h1>
             <span>quantity</span>
             <div>
@@ -107,7 +97,6 @@ function deleteitem(index) {
                   addtocart(put);
                   put.count = 0;
                 "
-                class="addtocartbutton round"
                 :disabled="put.count == 0"
               >
                 Add to cart <span class="mdi mdi-cart"></span>
@@ -124,13 +113,8 @@ function deleteitem(index) {
     <img src="../assets/logo.png" alt="" class="logo" />
     <span class="brand hide">Shop Demo</span>
     <div style="position: relative">
-<<<<<<< HEAD
-      <input type="text" class="searchinput" placeholder=" type to search" />
-      <button class="searchbutton">
-=======
       <input type="text" class="searchinput" placeholder="type to search" v-model="searchtext" v-if="!showcart" />
       <!-- button class="searchbutton">
->>>>>>> b187cd0b2a3d54e5fda414aca8f873143f98c3a9
         <span class="mdi mdi-magnify"></span>
       </button -->
     </div>
@@ -155,7 +139,6 @@ function deleteitem(index) {
   <!-- Shop Section -->
   <div v-if="!showcart">
     <div>
-      asdadsad
     </div>
     <div class="shop row">
       <div v-for="(i, index) in query(searchtext)" class="column" v-motion-pop>
@@ -166,7 +149,7 @@ function deleteitem(index) {
             <span class="itemprice">${{ i.price }}</span>
             <button
               class="itembutton"
-              @click="(showdetail = !showdetail), (put = shopdata[index])"
+              @click="(showdetail = !showdetail), (put = query(searchtext)[index])"
             >
               see more
             </button>
@@ -178,11 +161,7 @@ function deleteitem(index) {
 
   <!-- Cart section -->
   <div v-if="showcart" class="cartpanel">
-<<<<<<< HEAD
-    <h1>CART</h1>
-=======
     <h1>Shopping Cart</h1>
->>>>>>> b187cd0b2a3d54e5fda414aca8f873143f98c3a9
     <div
       class="row cartitem round"
       v-for="(i,index) in cart"
@@ -523,20 +502,6 @@ input[type="number"] {
   vertical-align: middle;
   background-color: orange;
 }
-<<<<<<< HEAD
-.addtocartbutton{
-  width: 95%;
-  height: 2rem;
-  border: solid 1px orange;
-  color: orange;
-}
-button.addtocartbutton:disabled{
-    border: solid 1px grey;
-  color: grey;
-}
-
-
-=======
 a{
   text-decoration: none;
   color: white;
@@ -565,5 +530,4 @@ a{
   box-shadow: none;
   border: none;
 }
->>>>>>> b187cd0b2a3d54e5fda414aca8f873143f98c3a9
 </style>
